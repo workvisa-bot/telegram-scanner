@@ -1,5 +1,6 @@
 from telethon import TelegramClient, events
 import asyncio
+from keep_alive import keep_alive  # добавили
 
 # Данные API Telegram
 api_id = 22736879
@@ -8,7 +9,7 @@ api_hash = "c302972286737b8e38d11290c8690558"
 # ID чата, куда бот будет пересылать сообщения
 target_chat_id = 4912555353
 
-# Обновлённый список ключевых фраз
+# Ключевые фразы
 keywords = [
     "куплю страховку", "где купить страховку", "где купить страховку на машину", "куплю страховку на машину",
     "куплю глово", "куплю glovo",
@@ -24,7 +25,6 @@ keywords = [
 # Запуск клиента
 client = TelegramClient("session", api_id, api_hash)
 
-# Функция поиска совпадений
 def count_keywords(text, keyword_list):
     normalized = text.lower()
     return sum(1 for kw in keyword_list if kw in normalized)
@@ -63,6 +63,9 @@ async def handler(event):
             await client.send_message(target_chat_id, msg, parse_mode="markdown")
         except Exception as e:
             print(f"❌ Ошибка при отправке сообщения: {e}")
+
+# 🟢 Важно: Запускаем keep_alive
+keep_alive()
 
 print("✅ Сканер запущен. Ожидаем новые сообщения...")
 client.start()
